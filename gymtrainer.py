@@ -59,9 +59,9 @@ if user_input:
 
     try:
         client = OpenAI(
-            api_key=api_key,
-            base_url="https://integrate.api.nvidia.com/v1"   # Replace with actual Nmedia endpoint
-        )
+        api_key=api_key,
+        base_url="https://integrate.api.nvidia.com/v1"
+    )
 
         system_prompt = """
 You are an expert fitness and health coach.
