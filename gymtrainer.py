@@ -83,7 +83,7 @@ Rules:
 """
 
         response = client.chat.completions.create(
-            model="meta/muse-glimmer-30b",   # Replace with actual Nmedia model
+            model="meta/llama-3.1-70b-instruct",   # Replace with actual Nmedia model
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_input}
