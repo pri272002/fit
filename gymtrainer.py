@@ -21,7 +21,7 @@ st.write(
 # ----------------------
 st.sidebar.title("Settings")
 
-api_key = "AQ.Ab8RN6JQRXqqtS7a53Ewrs4KPxYGD6gaHqD-tX2nt_OAUXG9KA"
+api_key = "AQ.Ab8RN6L04BzCl0C0xIDd3kHRdGX3mF_XSKtyWNiXHQP2b0FkYQ"
 
 st.sidebar.markdown("---")
 
