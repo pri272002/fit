@@ -1,8 +1,8 @@
 import streamlit as st
-from openai import OpenAI
+from google import genai
 
 # ----------------------
-# Page Configuration
+# Page Config
 # ----------------------
 st.set_page_config(
     page_title="Fitness & Health AI Coach",
@@ -11,8 +11,9 @@ st.set_page_config(
 )
 
 st.title("💪 Fitness & Health AI Coach")
+
 st.write(
-    "Ask me anything about fitness, nutrition, workouts, muscle gain, weight loss, and healthy living."
+    "Ask me anything about fitness, nutrition, workouts, weight loss, muscle gain and healthy living."
 )
 
 # ----------------------
@@ -20,18 +21,13 @@ st.write(
 # ----------------------
 st.sidebar.title("Settings")
 
-# Nmedia API Key
-api_key = "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"
+api_key = "AQ.Ab8RN6ITYHF4-Upy-BKUh4kHqZQauwl4iiQRTGBkfPrT3EXj1w"
 
 st.sidebar.markdown("---")
-st.sidebar.info("""
-Examples:
-- Create a workout plan
-- Help me lose weight
-- Calculate protein needs
-- Muscle building tips
-- Healthy diet suggestions
-""")
+
+if st.sidebar.button("Clear Chat"):
+    st.session_state.messages = []
+    st.rerun()
 
 # ----------------------
 # Chat History
@@ -44,60 +40,82 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # ----------------------
-# Chat Input
+# User Input
 # ----------------------
-user_input = st.chat_input("Ask a fitness question...")
+user_input = st.chat_input(
+    "Ask a fitness question..."
+)
 
 if user_input:
 
+    if not api_key:
+        st.error("Please enter your Gemini API Key.")
+        st.stop()
+
     st.session_state.messages.append(
-        {"role": "user", "content": user_input}
+        {
+            "role": "user",
+            "content": user_input
+        }
     )
 
     with st.chat_message("user"):
         st.markdown(user_input)
 
     try:
-        client = OpenAI(
-        api_key=api_key,
-        base_url="https://integrate.api.nvidia.com/v1"
-    )
 
-        system_prompt = """
-You are an expert fitness and health coach.
+        client = genai.Client(
+            api_key=api_key
+        )
+
+        conversation = ""
+
+        for msg in st.session_state.messages:
+            conversation += (
+                f"{msg['role']}: {msg['content']}\n"
+            )
+
+        prompt = f"""
+You are an expert Fitness and Health Coach.
 
 You help users with:
 - Workout plans
 - Weight loss
 - Muscle gain
 - Nutrition
-- Cardio training
+- Meal planning
+- Cardio
 - Strength training
-- Healthy lifestyle habits
+- Healthy habits
 
 Rules:
 - Give professional advice.
-- Use bullet points whenever possible.
-- Be motivating and supportive.
-- If a question is medical, advise consulting a healthcare professional.
+- Use bullet points.
+- Be supportive and motivating.
+- If the topic is medical, recommend consulting a healthcare professional.
+
+Conversation:
+{conversation}
+
+Assistant:
 """
 
-        response = client.chat.completions.create(
-            model="meta/muse-glimmer-30b",   # Replace with actual Nmedia model
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_input}
-            ]
+        response = client.models.generate_content(
+            model="gemini-flash-lite-latest",
+            contents=prompt
         )
 
-        answer = response.choices[0].message.content
+        answer = response.text
 
         with st.chat_message("assistant"):
             st.markdown(answer)
 
         st.session_state.messages.append(
-            {"role": "assistant", "content": answer}
+            {
+                "role": "assistant",
+                "content": answer
+            }
         )
 
     except Exception as e:
-        st.error(f"Error: {e}")
+        st.error(f"Error: {str(e)}")
