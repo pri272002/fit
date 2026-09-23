@@ -18,10 +18,7 @@ st.write("Ask me anything about fitness, nutrition, workouts, muscle gain, weigh
 # ----------------------
 st.sidebar.title("Settings")
 
-api_key = st.sidebar.text_input(
-    "AQ.Ab8RN6LBZ-Xd1PUpZoQCnVhyXnqssm__kwnggbridjgcEPkXDQ",
-    type="password"
-)
+api_key ="AQ.Ab8RN6LBZ-Xd1PUpZoQCnVhyXnqssm__kwnggbridjgcEPkXDQ"
 
 st.sidebar.markdown("---")
 st.sidebar.info(
