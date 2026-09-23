@@ -20,10 +20,7 @@ st.write(
 # Sidebar
 # ----------------------
 st.sidebar.title("Settings")
-import streamlit as st
- 
 api_key = st.secrets["api"]
-
 st.sidebar.markdown("---")
 
 if st.sidebar.button("Clear Chat"):
