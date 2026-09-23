@@ -20,8 +20,9 @@ st.write(
 # Sidebar
 # ----------------------
 st.sidebar.title("Settings")
-
-api_key = "AQ.Ab8RN6L04BzCl0C0xIDd3kHRdGX3mF_XSKtyWNiXHQP2b0FkYQ"
+import streamlit as st
+ 
+api_key = st.secrets["api"]
 
 st.sidebar.markdown("---")
 
