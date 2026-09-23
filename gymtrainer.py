@@ -1,5 +1,5 @@
 import streamlit as st
-from google import genai
+from openai import OpenAI
 
 # ----------------------
 # Page Configuration
@@ -11,26 +11,27 @@ st.set_page_config(
 )
 
 st.title("💪 Fitness & Health AI Coach")
-st.write("Ask me anything about fitness, nutrition, workouts, muscle gain, weight loss, and healthy living.")
+st.write(
+    "Ask me anything about fitness, nutrition, workouts, muscle gain, weight loss, and healthy living."
+)
 
 # ----------------------
 # Sidebar
 # ----------------------
 st.sidebar.title("Settings")
 
-api_key ="AQ.Ab8RN6LBZ-Xd1PUpZoQCnVhyXnqssm__kwnggbridjgcEPkXDQ"
+# Nmedia API Key
+api_key = "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"
 
 st.sidebar.markdown("---")
-st.sidebar.info(
-    """
-    Examples:
-    - Create a workout plan
-    - Help me lose weight
-    - Calculate protein needs
-    - Muscle building tips
-    - Healthy diet suggestions
-    """
-)
+st.sidebar.info("""
+Examples:
+- Create a workout plan
+- Help me lose weight
+- Calculate protein needs
+- Muscle building tips
+- Healthy diet suggestions
+""")
 
 # ----------------------
 # Chat History
@@ -49,10 +50,6 @@ user_input = st.chat_input("Ask a fitness question...")
 
 if user_input:
 
-    if not api_key:
-        st.error("Please enter your Gemini API Key.")
-        st.stop()
-
     st.session_state.messages.append(
         {"role": "user", "content": user_input}
     )
@@ -61,7 +58,10 @@ if user_input:
         st.markdown(user_input)
 
     try:
-        client = genai.Client(api_key=api_key)
+        client = OpenAI(
+            api_key=api_key,
+            base_url="https://api.nmedia.ai/v1"   # Replace with actual Nmedia endpoint
+        )
 
         system_prompt = """
 You are an expert fitness and health coach.
@@ -82,12 +82,15 @@ Rules:
 - If a question is medical, advise consulting a healthcare professional.
 """
 
-        response = client.models.generate_content(
-            model="gemini-flash-lite-latest",
-            contents=f"{system_prompt}\n\nUser Question: {user_input}"
+        response = client.chat.completions.create(
+            model="meta/muse-glimmer-30b",   # Replace with actual Nmedia model
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_input}
+            ]
         )
 
-        answer = response.text
+        answer = response.choices[0].message.content
 
         with st.chat_message("assistant"):
             st.markdown(answer)
@@ -97,4 +100,4 @@ Rules:
         )
 
     except Exception as e:
-        st.error(f"Error: {str(e)}")
+        st.error(f"Error: {e}")
