@@ -60,7 +60,7 @@ if user_input:
     try:
         client = OpenAI(
             api_key=api_key,
-            base_url="https://api.nmedia.ai/v1"   # Replace with actual Nmedia endpoint
+            base_url="https://integrate.api.nvidia.com/v1"   # Replace with actual Nmedia endpoint
         )
 
         system_prompt = """
